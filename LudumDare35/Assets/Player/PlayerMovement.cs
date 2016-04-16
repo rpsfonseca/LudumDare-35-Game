@@ -8,6 +8,10 @@ public class PlayerMovement : MonoBehaviour {
 	private bool collided = false;
 	public float speed = 20;
 	public float offset = 60;
+
+	public GameObject cubePlayer;
+	public GameObject pyramidPlayer;
+	public GameObject cylinderPlayer;
 	// Use this for initialization
 	void Start () {
 	
@@ -15,16 +19,16 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float yMov = Input.GetAxis ("Vertical");
+		float yMov = Input.GetAxis ("Horizontal");
 		//float xMov = Input.GetAxis ("Vertical");
 
 		if (!collided) {
 			transform.Translate (Vector3.right * Time.deltaTime * speed, Space.World);
 
-			if (yMov > 0f && transform.position.z == 0f) {
+			if (yMov < 0f && transform.position.z == 0f) {
 				moveDownwards = false;
 				moveUpwards = true;
-			} else if (yMov < 0f && transform.position.z == offset) {
+			} else if (yMov > 0f && transform.position.z == offset) {
 				moveDownwards = true;
 				moveUpwards = false;
 			}
@@ -47,9 +51,17 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col) {
-		//Debug.Log (col);
-		collided = true;
-		transform.Translate (Vector3.zero);
+		if (col.gameObject.tag.Equals ("Obstacle_Cube") && pyramidPlayer.activeInHierarchy == true) {
+
+			Debug.Log (col);
+			collided = true;
+			speed = 0f;
+
+		} else if (col.gameObject.tag.Equals ("Obstacle_Pyramid") && cubePlayer.activeInHierarchy == true) {
+			Debug.Log (col);
+			collided = true;
+			speed = 0f;
+		}
 	}
 
 
